@@ -27,7 +27,7 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }}:7
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }}
 
 
   build-backend:
@@ -45,6 +45,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Get short SHA
+      run: echo "::set-env name=SHORT_SHA::${{ github.sha }}" 
+      env:
+        GITHUB_SHA: ${{ github.sha }}
       
     - name: Build and push
       uses: docker/build-push-action@v5
@@ -52,4 +57,4 @@ jobs:
         context: ./backend
         file: ./backend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ github.sha }}:7
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.GITHUB_SHA }}
