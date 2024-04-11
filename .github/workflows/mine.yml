@@ -27,4 +27,4 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:$(date +%s)
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }}
