@@ -12,6 +12,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Shorten SHA
+      id: shorten_sha
+      run: echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-7)"
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
@@ -27,7 +31,7 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ steps.shorten_sha.outputs.short_sha }}
 
 
   build-backend:
@@ -36,6 +40,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Shorten SHA
+      id: shorten_sha
+      run: echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-7)"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -52,4 +60,4 @@ jobs:
         context: ./backend
         file: ./backend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ github.sha }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ steps.shorten_sha.outputs.short_sha }}
